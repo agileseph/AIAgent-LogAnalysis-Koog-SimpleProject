@@ -1,0 +1,17 @@
+Test Suite 'LoginUITests' started at 2024-03-15 10:23:45.123
+Test Case '-[LoginUITests testLoginWithValidCredentials]' started.
+2024-03-15 10:23:45.456 MyApp[1234:5678] XCTest: Beginning test
+t =     0.50s     Find the "emailTextField" Button
+t =     0.51s     Tap the "emailTextField" Button
+t =     1.20s     Type 'user@example.com' into "emailTextField"
+t =     1.80s     Find the "passwordTextField" Button
+t =     1.81s     Tap the "passwordTextField" Button
+t =     2.40s     Type text into "passwordTextField"
+t =     3.00s     Find the "loginButton" Button
+t =     3.01s     Tap the "loginButton" Button
+t =     5.50s     Find the "dashboardTitle" StaticText
+
+/Users/dev/MyApp/LoginUITests/LoginUITests.swift:42: error: -[LoginUITests testLoginWithValidCredentials] : XCTAssertEqual failed: ("Welcome, User!") is not equal to ("Welcome, Admin!")
+Test Case '-[LoginUITests testLoginWithValidCredentials]' failed (5.234 seconds).
+Test Suite 'LoginUITests' finished at 2024-03-15 10:23:50.357.
+Executed 1 test, with 1 failure (0 unexpected) in 5.234 (5.357) seconds.
