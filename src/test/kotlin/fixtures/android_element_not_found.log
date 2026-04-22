@@ -1,0 +1,13 @@
+03-15 10:23:45.123  1234  5678 I TestRunner: started: testLoginWithValidCredentials(com.example.app.LoginInstrumentedTest)
+03-15 10:23:45.456  1234  5678 I Espresso: Performing 'single click' action on view with id: com.example.app:id/emailEditText
+03-15 10:23:46.789  1234  5678 I Espresso: Performing 'type text(user@example.com)' action on view with id: com.example.app:id/emailEditText
+03-15 10:23:47.012  1234  5678 I Espresso: Performing 'single click' action on view with id: com.example.app:id/loginButton
+03-15 10:23:49.234  1234  5678 E TestRunner: failed: testLoginWithValidCredentials(com.example.app.LoginInstrumentedTest)
+03-15 10:23:49.235  1234  5678 E TestRunner: ----- begin exception -----
+03-15 10:23:49.236  1234  5678 E TestRunner: androidx.test.espresso.NoMatchingViewException: No views in hierarchy found matching: with id: com.example.app:id/dashboardTitle
+03-15 10:23:49.237  1234  5678 E TestRunner: View Hierarchy:
+03-15 10:23:49.238  1234  5678 E TestRunner: +>FrameLayout{id=-1, visibility=VISIBLE}
+03-15 10:23:49.239  1234  5678 E TestRunner:   +>LinearLayout{id=-1, visibility=VISIBLE}
+03-15 10:23:49.240  1234  5678 E TestRunner:     +>TextView{id=2131165278, res-name=errorMessage, text=Invalid credentials}
+03-15 10:23:49.241  1234  5678 E TestRunner: ----- end exception -----
+03-15 10:23:49.242  1234  5678 I TestRunner: finished: testLoginWithValidCredentials(com.example.app.LoginInstrumentedTest)
