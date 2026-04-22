@@ -185,7 +185,7 @@ Naming: `PascalCase` classes, `camelCase` functions/vals, `SCREAMING_SNAKE` cons
 ### Stage 1 — Foundation
 - [x] Task 1: Domain model (`model/` package)
 - [x] Task 2: Log parser — platform detection
-- [ ] Task 3: Log parser — text extraction → ParsedLog
+- [x] Task 3: Log parser — text extraction → ParsedLog
 - [ ] Task 4: Deterministic classifier — iOS rules (3 minimum)
 - [ ] Task 5: Deterministic classifier — Android rules (3 minimum)
 - [ ] Task 6: Deterministic classifier — pipeline entry point
