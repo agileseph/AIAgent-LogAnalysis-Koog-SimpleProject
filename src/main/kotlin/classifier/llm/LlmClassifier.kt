@@ -1,19 +1,26 @@
 package classifier.llm
 
+import agent.JsonResponseParser
+import agent.LogAnalystAgent
 import model.LogAnalysis
 import parser.ParsedLog
 
 /**
- * Task 10: LLM-based fallback classifier.
+ * LLM-based fallback classifier.
  *
  * Wraps the Koog agent and maps its response to LogAnalysis
  * with classifiedBy = ClassifierSource.LLM.
  *
  * Only called when DeterministicClassifier returns null.
  */
-class LlmClassifier {
+class LlmClassifier(
+    private val agent: LogAnalystAgent = LogAnalystAgent(),
+    private val responseParser: JsonResponseParser = JsonResponseParser()
+) {
 
     suspend fun classify(log: ParsedLog): LogAnalysis {
-        TODO("Task 10: implement LLM classifier using Koog agent")
+        val logContent = log.relevantLines.joinToString("\n")
+        val rawResponse = agent.analyse(logContent)
+        return responseParser.parse(rawResponse, log.platform)
     }
 }
