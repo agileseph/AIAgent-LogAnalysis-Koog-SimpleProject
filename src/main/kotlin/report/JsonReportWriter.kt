@@ -1,21 +1,21 @@
 package report
 
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import model.LogAnalysis
+import java.nio.file.Path
+import kotlin.io.path.createParentDirectories
+import kotlin.io.path.writeText
 
-/**
- * Task 7: Serialises LogAnalysis to JSON.
- *
- * Output destination:
- *   - stdout (default)
- *   - file path (when --output flag provided)
- */
+private val json = Json { prettyPrint = true }
+
 class JsonReportWriter {
 
-    fun write(analysis: LogAnalysis): String {
-        TODO("Task 7: implement kotlinx.serialization JSON output")
-    }
+    fun write(analysis: LogAnalysis): String = json.encodeToString(analysis)
 
     fun writeToFile(analysis: LogAnalysis, path: String) {
-        TODO("Task 7: implement file output")
+        Path.of(path)
+            .also { it.createParentDirectories() }
+            .writeText(write(analysis))
     }
 }
