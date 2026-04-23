@@ -1,10 +1,14 @@
 package cli
 
 import classifier.deterministic.DeterministicClassifier
+import model.FailureCategory
 import model.Platform
 import parser.LogParser
+import parser.UnknownPlatformException
 import report.JsonReportWriter
 import kotlin.system.exitProcess
+
+private const val USAGE = "Usage: analyse --file <path> [--output <path>] [--platform ios|android]"
 
 class AnalyseCommand(
     private val exitFn: (Int) -> Unit = ::exitProcess
@@ -15,19 +19,29 @@ class AnalyseCommand(
 
         val filePath = parsed["--file"]
         if (filePath == null) {
-            System.err.println("Usage: analyse --file <path> [--output <path>] [--platform ios|android]")
+            System.err.println("Error: --file is required.\n$USAGE")
             exitFn(1)
             return
         }
 
-        val log = LogParser().parse(filePath).let { parsedLog ->
-            val override = parsed["--platform"]?.let { platformArg(it) }
-            if (override != null) parsedLog.copy(platform = override) else parsedLog
+        val log = try {
+            LogParser().parse(filePath).let { parsedLog ->
+                val override = parsed["--platform"]?.let { platformArg(it) ?: return }
+                if (override != null) parsedLog.copy(platform = override) else parsedLog
+            }
+        } catch (e: IllegalArgumentException) {
+            System.err.println("Error: File not found: $filePath")
+            exitFn(1)
+            return
+        } catch (e: UnknownPlatformException) {
+            System.err.println("Error: ${e.message}")
+            exitFn(1)
+            return
         }
 
         val analysis = DeterministicClassifier().classify(log)
         if (analysis == null) {
-            System.err.println("No deterministic rule matched. LLM fallback not yet implemented.")
+            System.err.println("No rule matched. LLM fallback not yet implemented. Category: ${FailureCategory.UNKNOWN}")
             exitFn(2)
             return
         }
@@ -35,7 +49,14 @@ class AnalyseCommand(
         val writer = JsonReportWriter()
         val outputPath = parsed["--output"]
         if (outputPath != null) {
-            writer.writeToFile(analysis, outputPath)
+            try {
+                writer.writeToFile(analysis, outputPath)
+                System.err.println("Report written to $outputPath")
+            } catch (e: Exception) {
+                System.err.println("Error: Failed to write output file: ${e.message}")
+                exitFn(3)
+                return
+            }
         } else {
             println(writer.write(analysis))
         }
@@ -58,13 +79,14 @@ class AnalyseCommand(
         return result
     }
 
-    private fun platformArg(value: String): Platform = when (value.lowercase()) {
+    /** Returns the Platform, or null if invalid (error already printed, exitFn called). */
+    private fun platformArg(value: String): Platform? = when (value.lowercase()) {
         "ios" -> Platform.IOS
         "android" -> Platform.ANDROID
         else -> {
-            System.err.println("Unknown platform '$value'. Expected ios or android.")
+            System.err.println("Invalid platform: $value. Use ios or android.")
             exitFn(1)
-            throw IllegalArgumentException("Unknown platform: $value")
+            null
         }
     }
 }
