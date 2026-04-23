@@ -6,7 +6,7 @@ import model.LogAnalysis
 import parser.ParsedLog
 
 /**
- * Task 11: Composes deterministic and LLM classifiers.
+ * Composes deterministic and LLM classifiers.
  *
  * Contract:
  *   1. DeterministicClassifier always runs first (zero LLM cost)
@@ -14,11 +14,10 @@ import parser.ParsedLog
  *   3. classifiedBy is always set on the returned LogAnalysis
  */
 class ClassifierPipeline(
-    private val deterministic: DeterministicClassifier = DeterministicClassifier(),
-    private val llm: LlmClassifier = LlmClassifier()
+    private val deterministic: (ParsedLog) -> LogAnalysis? = DeterministicClassifier()::classify,
+    private val llm: suspend (ParsedLog) -> LogAnalysis = LlmClassifier()::classify
 ) {
 
-    suspend fun classify(log: ParsedLog): LogAnalysis {
-        TODO("Task 11: implement pipeline composition")
-    }
+    suspend fun classify(log: ParsedLog): LogAnalysis =
+        deterministic(log) ?: llm(log)
 }
