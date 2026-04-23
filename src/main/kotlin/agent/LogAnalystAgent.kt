@@ -16,12 +16,10 @@ private const val TIMEOUT_MS = 60_000L
  */
 class LogAnalystAgent {
 
-    private val model = LLModel(OllamaLLMProvider, MODEL_ID)
-
     suspend fun analyse(logContent: String): String = withTimeout(TIMEOUT_MS) {
         AIAgent.builder()
             .promptExecutor(simpleOllamaAIExecutor(OLLAMA_BASE_URL))
-            .llmModel(model)
+            .llmModel(LLModel(OllamaLLMProvider, MODEL_ID))
             .build()
             .run(AnalysisPrompt.build(logContent))
     }
