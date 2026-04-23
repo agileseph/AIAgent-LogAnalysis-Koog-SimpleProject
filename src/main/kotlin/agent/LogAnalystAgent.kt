@@ -1,16 +1,28 @@
 package agent
 
+import ai.koog.agents.core.agent.AIAgent
+import ai.koog.prompt.executor.llms.all.simpleOllamaAIExecutor
+import ai.koog.prompt.llm.LLModel
+import ai.koog.prompt.llm.OllamaLLMProvider
+import kotlinx.coroutines.withTimeout
+
+private const val OLLAMA_BASE_URL = "http://localhost:11434"
+private const val MODEL_ID = "qwen2.5-coder:7b"
+private const val TIMEOUT_MS = 60_000L
+
 /**
- * Task 9a: Koog agent scaffolding.
- *
- * Connects to local Ollama (qwen2.5-coder:7b) and sends
- * a structured prompt requesting JSON-only LogAnalysis output.
- *
- * Task 9b: JsonResponseParser handles correction of malformed responses.
+ * Sends a structured log analysis prompt to local Ollama and returns the raw LLM response.
+ * Task 9b (JsonResponseParser) handles correction of malformed JSON responses.
  */
 class LogAnalystAgent {
 
-    suspend fun analyse(logContent: String): String {
-        TODO("Task 9a: implement Koog agent with Ollama backend")
+    private val model = LLModel(OllamaLLMProvider, MODEL_ID)
+
+    suspend fun analyse(logContent: String): String = withTimeout(TIMEOUT_MS) {
+        AIAgent.builder()
+            .promptExecutor(simpleOllamaAIExecutor(OLLAMA_BASE_URL))
+            .llmModel(model)
+            .build()
+            .run(AnalysisPrompt.build(logContent))
     }
 }
