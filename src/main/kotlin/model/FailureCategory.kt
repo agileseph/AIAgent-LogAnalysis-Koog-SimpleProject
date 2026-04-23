@@ -1,5 +1,8 @@
 package model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class FailureCategory {
     ASSERTION_FAILURE,
     ELEMENT_NOT_FOUND,
