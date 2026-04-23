@@ -1,20 +1,22 @@
 package classifier.deterministic
 
 import model.LogAnalysis
+import model.Platform
 import parser.ParsedLog
 
 /**
- * Task 6: Orchestrates deterministic rule classifiers.
+ * Orchestrates deterministic rule classifiers.
  *
  * Returns null when no rule matches — signals LLM fallback required.
  * Never calls any external service.
  */
-class DeterministicClassifier {
+class DeterministicClassifier(
+    private val iosClassifier: (ParsedLog) -> LogAnalysis? = IosRuleClassifier()::classify,
+    private val androidClassifier: (ParsedLog) -> LogAnalysis? = AndroidRuleClassifier()::classify
+) {
 
-    private val iosClassifier = IosRuleClassifier()
-    private val androidClassifier = AndroidRuleClassifier()
-
-    fun classify(log: ParsedLog): LogAnalysis? {
-        TODO("Task 6: route to platform classifier, return null on miss")
+    fun classify(log: ParsedLog): LogAnalysis? = when (log.platform) {
+        Platform.IOS -> iosClassifier(log)
+        Platform.ANDROID -> androidClassifier(log)
     }
 }
