@@ -26,6 +26,8 @@ Classification works rule-first: fast, deterministic pattern matching fires befo
 
 ### Command Examples
 
+* NOTE: Ollama should be already running in terminal ("ollama serve")
+
 ```bash
 # a. Analyse an iOS log file — result printed to stdout
 ./gradlew run --args="analyse --file /path/to/ios_test.log"
