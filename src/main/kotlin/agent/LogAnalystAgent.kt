@@ -17,10 +17,19 @@ private const val TIMEOUT_MS = 60_000L
 class LogAnalystAgent {
 
     suspend fun analyse(logContent: String): String = withTimeout(TIMEOUT_MS) {
-        AIAgent.builder()
+        val inputPrompt = AnalysisPrompt.build(logContent)
+        val systemPrompt = AnalysisSystemPrompt.build()
+        println(">>> Input prompt: \n$inputPrompt")
+        println(">>> Input prompt end.")
+
+        val result = AIAgent.builder()
             .promptExecutor(simpleOllamaAIExecutor(OLLAMA_BASE_URL))
             .llmModel(LLModel(OllamaLLMProvider, MODEL_ID))
+            .systemPrompt(systemPrompt)
             .build()
-            .run(AnalysisPrompt.build(logContent))
+            .run(inputPrompt)
+        println(">>> AI Agent response: \n$result")
+        println(">>> AI Agent response end.")
+        result
     }
 }

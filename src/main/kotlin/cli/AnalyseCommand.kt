@@ -52,17 +52,17 @@ class AnalyseCommand(
         if (outputPath != null) {
             try {
                 writer.writeToFile(analysis, outputPath)
-                System.err.println("Report written to $outputPath")
+                println("Report written to file = '$outputPath'")
             } catch (e: Exception) {
                 System.err.println("Error: Failed to write output file: ${e.message}")
                 exitFn(3)
                 return
             }
         } else {
-            println(writer.write(analysis))
+            println("Report written to console: ${writer.write(analysis)}")
         }
 
-        System.err.println("Analysis complete.")
+        println("Analysis complete.")
     }
 
     private fun parseArgs(args: Array<String>): Map<String, String> {
