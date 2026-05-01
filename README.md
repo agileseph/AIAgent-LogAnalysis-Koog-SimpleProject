@@ -61,6 +61,50 @@ Classification works rule-first: fast, deterministic pattern matching fires befo
 }
 ```
 
+```json
+{
+    "platform": "IOS",
+    "failureCategory": "ASSERTION_FAILURE",
+    "confidence": 1.0,
+    "classifiedBy": "LLM",
+    "evidence": [
+        "XCTAssertEqual failed: \"Welcome, User!\" is not equal to \"Welcome, Admin!\"",
+        "-[LoginUITests testLoginWithValidCredentials] : XCTAssertEqual failed"
+    ],
+    "recommendedAction": "Verify login flow and expected welcome message.",
+    "rawSummary": "Test assertion failed due to incorrect welcome message."
+}
+```
+
+```json
+{
+    "platform": "IOS",
+    "failureCategory": "ASSERTION_FAILURE",
+    "confidence": 1.0,
+    "classifiedBy": "LLM",
+    "evidence": [
+        "XCTAssertEqual failed: \"Welcome, User!\" is not equal to \"Welcome, Admin!\"",
+        "Expected 'Welcome, Admin!' but got 'Welcome, User!'"
+    ],
+    "recommendedAction": "Verify the expected user message in the test case.",
+    "rawSummary": "Test assertion failure due to incorrect user welcome message."
+}
+```
+
+```json
+{
+    "platform": "ANDROID",
+    "failureCategory": "ASSERTION_FAILURE",
+    "confidence": 1.0,
+    "classifiedBy": "LLM",
+    "evidence": [
+        "junit.framework.AssertionFailedError: expected:<29.98> but was:<14.99>"
+    ],
+    "recommendedAction": "Review cart total calculation logic",
+    "rawSummary": "Test failed due to assertion error in cart total calculation"
+}
+```
+
 `classifiedBy` tells you whether a rule matched (`DETERMINISTIC`) or the LLM was used (`LLM`). `evidence` contains the exact log lines that led to the diagnosis.
 
 ### Error Output
