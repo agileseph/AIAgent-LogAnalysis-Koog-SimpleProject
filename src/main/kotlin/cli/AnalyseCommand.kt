@@ -1,14 +1,14 @@
 package cli
 
-import classifier.deterministic.DeterministicClassifier
-import model.FailureCategory
+import classifier.ClassifierPipeline
+import kotlinx.coroutines.runBlocking
 import model.Platform
 import parser.LogParser
 import parser.UnknownPlatformException
 import report.JsonReportWriter
 import kotlin.system.exitProcess
 
-private const val USAGE = "Usage: analyse --file <path> [--output <path>] [--platform ios|android]"
+private const val USAGE = "Usage: analyse --file <path> [--output <path>] [--platform ios|android] [--force-llm]"
 
 class AnalyseCommand(
     private val exitFn: (Int) -> Unit = ::exitProcess
@@ -39,29 +39,30 @@ class AnalyseCommand(
             return
         }
 
-        val analysis = DeterministicClassifier().classify(log)
-        if (analysis == null) {
-            System.err.println("No rule matched. LLM fallback not yet implemented. Category: ${FailureCategory.UNKNOWN}")
-            exitFn(2)
-            return
+        val forceLlm = "--force-llm" in args
+        val pipeline = if (forceLlm) {
+            ClassifierPipeline(deterministic = { null })
+        } else {
+            ClassifierPipeline()
         }
+        val analysis = runBlocking { pipeline.classify(log) }
 
         val writer = JsonReportWriter()
         val outputPath = parsed["--output"]
         if (outputPath != null) {
             try {
                 writer.writeToFile(analysis, outputPath)
-                System.err.println("Report written to $outputPath")
+                println("Report written to file = '$outputPath'")
             } catch (e: Exception) {
                 System.err.println("Error: Failed to write output file: ${e.message}")
                 exitFn(3)
                 return
             }
         } else {
-            println(writer.write(analysis))
+            println("Report written to console: ${writer.write(analysis)}")
         }
 
-        System.err.println("Analysis complete.")
+        println("Analysis complete.")
     }
 
     private fun parseArgs(args: Array<String>): Map<String, String> {

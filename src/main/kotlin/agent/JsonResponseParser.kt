@@ -1,6 +1,7 @@
 package agent
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import model.ClassifierSource
 import model.FailureCategory
@@ -27,7 +28,12 @@ class JsonResponseParser {
             .let(::fixTrailingCommas)
             .trim()
 
-        val dto = json.decodeFromString<LlmResponseDto>(corrected)
+        val dto = try {
+            json.decodeFromString<LlmResponseDto>(corrected)
+        } catch (e: SerializationException) {
+            System.err.println(">>> JSON deserialization exception: $e")
+            throw e
+        }
 
         val confidence = dto.confidence.coerceIn(0.0f, 1.0f)
 
