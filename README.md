@@ -6,7 +6,19 @@ A command-line tool that reads a mobile test failure log — iOS XCUITest or And
 It exists because reading raw test logs takes time; this tool gives you the root cause in one command.
 Classification works rule-first: fast, deterministic pattern matching fires before any AI is involved, so the LLM (Ollama running locally) is only consulted when the rules don't cover the failure.
 
----
+## Medium Article
+
+I documented the full development journey of this project in a Medium article published in **Towards AI**:
+
+**[Spec-Driven AI: Building a Koog Agent for Mobile Test Failure Analysis with an Open-Source Claude Skill](https://medium.com/towards-artificial-intelligence/spec-driven-ai-development-building-koog-agent-for-mobile-test-failure-analysis-with-claude-skill-2af71369587f)**
+
+The article covers:
+- How the Spec-Driven Development methodology works in practice
+- The 4-phase gate process: Specify → Plan → Tasks → Implement
+- Token efficiency tips for Claude CLI sessions
+- Honest reflections on cognitive load and where the methodology helps
+
+> Spoiler: the spec was written from a bathroom on an iPhone. 🛁
 
 ## How To Run
 
